@@ -2,6 +2,8 @@ import { Disciplina } from 'src/app/models/disciplina';
 import { DisciplinaService } from './../../services/disciplina.service';
 import { Component } from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
+import { Monitor } from 'src/app/models/monitor';
+import { MonitorService } from 'src/app/services/monitor.service';
 
 @Component({
   selector: 'app-inscricao',
@@ -10,8 +12,8 @@ import { FormArray, FormBuilder } from '@angular/forms';
 })
 export class InscricaoComponent {
 
-  
-  
+
+
     monitorForm = this._formBuilder.group({
       id: null,
       nome: [''],
@@ -25,14 +27,14 @@ export class InscricaoComponent {
       }),
       disponibilidade: this._formBuilder.array([this.criarDisponibilidade()])
     });
-    
-    agenda = [{ week_day: 'SEGUNDA', from: '', to: '' }];
-  
 
-    constructor(private _formBuilder: FormBuilder, disciplinaService: DisciplinaService) {
+    agenda = [{ week_day: 'SEGUNDA', from: '', to: '' }];
+
+
+    constructor(private _formBuilder: FormBuilder, private disciplinaService: DisciplinaService, private monitorService: MonitorService) {
       disciplinaService.buscarDisciplinas()
            .subscribe(res => {
-            this.disciplinas = res?.map(i=>{        
+            this.disciplinas = res?.map(i=>{
               return{
                 value: i.id,
                 label: i.nome
@@ -43,19 +45,19 @@ export class InscricaoComponent {
     }
 
     disciplinas: any[] = [];
-    
+
     addAgenda() {
       this.agenda.push({ week_day: 'SEGUNDA', from: '', to: '' });
     }
-  
+
     get disponibilidade(): FormArray {
       return this.monitorForm.get('disponibilidade') as FormArray;
     }
-  
+
     addDisponibilidade() {
       this.disponibilidade.push(this.criarDisponibilidade());
     }
-  
+
     criarDisponibilidade() {
       return this._formBuilder.group({
         diaSemana: [''],
@@ -63,8 +65,11 @@ export class InscricaoComponent {
         ate: ['']
       });
     }
-    
+
     onSalvar() {
-      
+
+      let monitor : Monitor = this.monitorForm.value;
+      this.monitorService.inserir(monitor).subscribe(data => console.log(data
+        ));
     }
 }
