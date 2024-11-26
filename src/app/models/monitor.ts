@@ -1,8 +1,11 @@
-export interface Monitor {
-  id: number;
-  nome: string;
-  foto: string;
-  whatsapp:string;
-  email:string;
-  conteudo: string;
+import { Disciplina } from 'src/app/models/disciplina';
+export class Monitor {
+ public id: number = 0;
+ public nome: string = "";
+ public foto: string = "";
+ public whatsapp:string ="";
+ public email:string ="";
+ public conteudo: string = "";
+
+ public disciplina : Disciplina = new Disciplina();
 }
